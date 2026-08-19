@@ -1,11 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>FWI Prediction</title>
 </head>
-<body>
-    <h1>Home Page</h1>
-</body>
-</html>
+<style>
+    td{
+        padding:10px
+    }
+    table{
+        margin-left: 10%;
+    }
+    form{
+        margin-left: 10%;
+    }
+    input{
+        margin: 5px;
+        
+    }
+</style>
+
+
+
+<!-- Main Input For Receiving Query to our ML -->
+<form action="{{ url_for('predict_datapoint') }}" method="post">
+    <h1>FWI Prediction</h1>
+    <input type="text" name="Temperature" placeholder="Temperature" required="required" /><br>
+    <input type="text" name="RH" placeholder="RH" required="required" /><br>
+    <input type="text" name="Ws" placeholder="Ws" required="required" /><br>
+    <input type="text" name="Rain" placeholder="Rain" required="required" /><br>
+    <input type="text" name="FFMC" placeholder="FFMC" required="required" /><br>
+    <input type="text" name="DMC" placeholder="DMC" required="required" /><br>
+    <input type="text" name="ISI" placeholder="ISI" required="required" /><br>
+    <input type="text" name="Classes" placeholder="Classes" required="required" /><br>
+    <input type="text" name="Region" placeholder="Region" required="required" /><br>
+
+    <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+</form>
+<br><br>
+{% if data %}
+
+<table border="1" >
+    <thead >
+        <tr >
+            <td >Temperature</td>
+            <td>RH</td>
+            <td>Ws</td>
+            <td>Rain</td>
+            <td>FFMC</td>
+            <td>DMC</td>
+            <td>ISI</td>
+            <td>Classes</td>
+            <td>Region</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{data.Temperature}}</td>
+            <td>{{data.RH}}</td>
+            <td>{{data.Ws}}</td>
+            <td>{{data.Rain}}</td>
+            <td>{{data.FFMC}}</td>
+            <td>{{data.DMC}}</td>
+            <td>{{data.ISI}}</td>
+            <td>{{data.Classes}}</td>
+            <td>{{data.Region}}</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="9">
+                <h2>
+                    THE FWI prediction is {{result}}
+                </h2>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+{% endif %}
