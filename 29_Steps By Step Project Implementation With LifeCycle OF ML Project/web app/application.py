@@ -9,8 +9,21 @@ application = Flask(__name__)
 app = application
 
 # import ridge regressor and standard scaler pickle
-linreg = pickle.load(open('models/linreg.pkl', 'rb'))
-standard_scaler = pickle.load(open('models/scaler.pkl', 'rb'))
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+linreg_path = os.path.join(BASE_DIR, 'models', 'linreg.pkl')
+scaler_path = os.path.join(BASE_DIR, 'models', 'scaler.pkl')
+
+linreg=''
+scaler=''
+
+with open(linreg_path, 'rb') as f:
+    linreg = pickle.load(f)
+
+with open(scaler_path, 'rb') as f:
+    scaler = pickle.load(f)
 
 
 @app.route("/")
@@ -21,7 +34,7 @@ def index():
 @app.route('/predictdata', methods = ['GET', 'POST'])
 def predict_datapoint():
     if request.method == 'POST':
-        try: 
+        try:
             Temprature = float(request.form.get('Temperature'))
             RH  = float(request.form.get('RH'))
             Ws = float(request.form.get('Ws'))
@@ -31,15 +44,15 @@ def predict_datapoint():
             ISI = float(request.form.get('ISI'))
             Classes = float(request.form.get('Classes'))
             Region = float(request.form.get('Region'))
-        
+
 
             df = pd.DataFrame(
-                [[Temprature, RH, Ws, Rain, FFMC, DMC, ISI, Classes, Region]], 
+                [[Temprature, RH, Ws, Rain, FFMC, DMC, ISI, Classes, Region]],
                 columns=['Temperature', 'RH', 'Ws', 'Rain', 'FFMC', 'DMC', 'ISI', 'Classes', 'Region']
             )
             print('\n','='*60,'\n')
             print('Without Scaled:\n', df)
-            new_data_scaled = standard_scaler.transform(df)
+            new_data_scaled = scaler.transform(df)
             dict_data = df.to_dict(orient='records')[0]
             print('Data After Scaled:\n', new_data_scaled)
 
@@ -47,7 +60,7 @@ def predict_datapoint():
             print('\n','='*60,'\n')
 
             result = linreg.predict(new_data_scaled)
-            
+
         except Exception as e:
             result = [f'Error: {e}']
             dict_data = dict()

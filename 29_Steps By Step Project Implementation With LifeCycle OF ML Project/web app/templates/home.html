@@ -27,6 +27,7 @@
 <!-- Main Input For Receiving Query to our ML -->
 <form action="{{ url_for('predict_datapoint') }}" method="post">
     <h1>FWI Prediction</h1>
+    <p>Enter all info in numerical form</p>
     <input type="text" name="Temperature" placeholder="Temperature" required="required" /><br>
     <input type="text" name="RH" placeholder="RH" required="required" /><br>
     <input type="text" name="Ws" placeholder="Ws" required="required" /><br>
